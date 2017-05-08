@@ -10,24 +10,31 @@ public class Main {
     public static void main(String[] args) {
         ipAddress(args[0]);
         port(Integer.parseInt(args[1]));
-
+        new RefreshBot();
         // Bot handler
-        post("/myBot", new TestTelegramBot());
+        post("/myfmb", new FruitMasterBot()); 
 
         // simple string by GET
-        get("/hello", (req, res) -> "Hello World");
+        get("/hello", new PrintResponse("Hello World"));
+        get("/webconsole", new WebConsole()); 
+//        get("/lgb_maintenance_on", new FruitMasterBotMaintenanceOff());
+//        get("/lgb_maintenance_off", new FruitMasterBotMaintenanceOff()); 
 
         // GET/POST handler
-        post("/test", new Test());
-        get("/test", new Test());
+        post("/test", new PrintResponse("yes, this is a test"));
+        get("/test", new PrintResponse("yes, this is a test"));
     }
 
 
 
-    private static class Test implements Route {
+    private static class PrintResponse implements Route {
+    	private String message;
+    	public PrintResponse(String test){
+    		this.message = test;
+    	}
         @Override
         public Object handle(Request request, Response response) throws Exception {
-            return "ok, test";
+            return (message==null||message.equals(""))?"ok, test":message;
         }
     }
 }
